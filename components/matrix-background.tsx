@@ -31,8 +31,12 @@ const MatrixBackground: React.FC<{ hover: boolean }> = ({ hover }) => {
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      // Fill with black background immediately on resize
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
 
+    // Initial setup
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
@@ -45,10 +49,10 @@ const MatrixBackground: React.FC<{ hover: boolean }> = ({ hover }) => {
     const cols = Math.ceil(window.innerWidth / spacing) + 2;
     const maxTravelDistance = spacing / 3;
     const influenceRadius = 125;
-    const matrix = 'CONFIDEXbase{}*></"$@&';
+    const matrix = 'CONFIDEXbaseH{}*></"$@&';
 
-    const dimmedBlue = 'rgba(100, 100, 100, 0.040)';
-    const fullBlue = 'rgba(89, 130, 246, 0.075)';
+    const dimmedBlue = 'rgba(100, 100, 100, 0.030)';
+    const fullBlue = 'rgba(189, 230, 246, 0.050)';
 
     const getRandomCharacter = (): string => {
       return matrix.charAt(Math.floor(Math.random() * matrix.length));
@@ -66,7 +70,7 @@ const MatrixBackground: React.FC<{ hover: boolean }> = ({ hover }) => {
           color: dimmedBlue,
           hoverColor: fullBlue,
           isMoving: false,
-          opacity: 0,
+          opacity: 1,
           character: getRandomCharacter(),
           drop: 1
         });
@@ -76,6 +80,7 @@ const MatrixBackground: React.FC<{ hover: boolean }> = ({ hover }) => {
     let mousePos = { x: 0, y: 0 };
 
     const animate = () => {
+      // Use a more opaque black for the background
       ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -89,10 +94,6 @@ const MatrixBackground: React.FC<{ hover: boolean }> = ({ hover }) => {
         const dx = mousePos.x - point.x;
         const dy = mousePos.y - point.y;
         const distanceSquared = dx * dx + dy * dy;
-
-        if (point.opacity < 1) {
-          point.opacity = Math.min(1, point.opacity + 0.01);
-        }
 
         // Only apply hover effects if hover prop is true
         if (hover) {
@@ -180,7 +181,7 @@ const MatrixBackground: React.FC<{ hover: boolean }> = ({ hover }) => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full -z-10"
+      className="fixed top-0 left-0 w-full h-full -z-10 bg-black"
     />
   );
 };

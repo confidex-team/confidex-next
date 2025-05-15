@@ -5,7 +5,7 @@ import MatrixBackground from "@/components/matrix-background";
 
 const Home = () => {
   return (
-    <main className="min-h-screen  relative">
+    <main className="min-h-screen relative">
       <MatrixBackground hover={true} />
       <Wrapper>
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] w-full px-4">
@@ -26,7 +26,7 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
               <Link
                 href="/swap"
-                className="group flex items-center gap-2 px-8 py-4 backdrop-blur-sm bg-blue-600 text-white rounded-none font-semibold hover:bg-blue-500/90 transition-all hover:shadow-lg hover:shadow-blue-500/20"
+                className="group flex items-center gap-2 px-8 py-4 backdrop-blur-sm bg-blue-700 text-white rounded-none font-semibold hover:bg-blue-600/90 transition-all hover:shadow-lg hover:shadow-blue-600/20"
               >
                 Launch App
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

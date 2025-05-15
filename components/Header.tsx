@@ -45,6 +45,7 @@ const Header = () => {
             </Link>
 
             <ConnectButton
+              
               showBalance={false}
               accountStatus="address"
               label="Connect"

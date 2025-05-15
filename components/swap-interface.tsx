@@ -185,7 +185,7 @@ export default function SwapInterface() {
 
   const getButtonClassName = () => {
     const baseClasses =
-      "w-full text-white font-bold py-4 px-6 rounded-xl mt-4 transition-colors";
+      "w-full text-white font-bold py-4 px-6 rounded-none mt-4 transition-colors";
     if (!isConnected) {
       return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`;
     }

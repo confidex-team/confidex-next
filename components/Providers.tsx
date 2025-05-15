@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
-import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { darkTheme, getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { baseSepolia, hardhat } from "wagmi/chains";
 
 const queryClient = new QueryClient();
@@ -18,7 +18,15 @@ const config = getDefaultConfig({
 const Providers = ({ children }: { children: ReactNode }) => (
   <WagmiProvider config={config}>
     <QueryClientProvider client={queryClient}>
-      <RainbowKitProvider>{children}</RainbowKitProvider>
+      <RainbowKitProvider
+        theme={darkTheme({
+          accentColor: "#2563eb",
+          accentColorForeground: "white",
+          fontStack: "system",
+          borderRadius: "none",
+          overlayBlur: "small",
+        })}
+      >{children}</RainbowKitProvider>
     </QueryClientProvider>
   </WagmiProvider>
 );

@@ -24,12 +24,12 @@ const LogEntry: React.FC<LogEntryProps> = ({ time, type, message }) => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-[#F6411B]/5 to-green-500/5 rounded-xl p-3 border border-[#F6411B]/20 hover:border-green-500/20 transition-colors">
+    <div className="bg-gradient-to-r from-blue-500/5 to-blue-600/5 rounded-none p-3 border border-blue-600/20 hover:border-blue-500/20 transition-colors">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[#F6411B] text-sm font-medium">{time}</span>
+        <span className="text-blue-500 text-sm font-medium">{time}</span>
         <span className={`${getTypeColor()} text-sm font-medium`}>{type}</span>
       </div>
-      <p className="text-[#F6411B] text-sm">{message}</p>
+      <p className="text-blue-600 text-sm">{message}</p>
     </div>
   );
 };

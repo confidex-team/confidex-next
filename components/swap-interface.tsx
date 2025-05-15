@@ -187,7 +187,7 @@ export default function SwapInterface() {
     const baseClasses =
       "w-full text-white font-bold py-4 px-6 rounded-xl mt-4 transition-colors";
     if (!isConnected) {
-      return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`;
+      return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`;
     }
 
     switch (swapStage) {
@@ -195,9 +195,9 @@ export default function SwapInterface() {
       case "matching":
       case "match_found":
       case "claiming":
-        return `${baseClasses} bg-[#F6411B] opacity-50 cursor-not-allowed`;
+        return `${baseClasses} bg-blue-600 opacity-50 cursor-not-allowed`;
       default:
-        return `${baseClasses} bg-[#F6411B] hover:bg-[#F6411B]/90`;
+        return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`;
     }
   };
 
@@ -276,16 +276,16 @@ export default function SwapInterface() {
   return (
     <div className="max-w-md w-full space-y-4">
       {/* Swap Card */}
-      <div className="bg-gradient-to-br backdrop-blur-sm from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
+      <div className="bg-gradient-to-br backdrop-blur-sm from-blue-600/5 to-blue-500/5 rounded-none p-5 shadow-lg border border-blue-600/20">
         {/* From Section */}
         <div className="mb-4">
           <div className="flex justify-between mb-2">
-            <p className="text-[#F6411B]">From</p>
-            <p className="text-[#F6411B]/70 text-sm">
+            <p className="text-blue-600">From</p>
+            <p className="text-blue-600/70 text-sm">
               Balance: {fromBalance?.formatted || "0.0"} {fromCurrency}
             </p>
           </div>
-          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
+          <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex items-center justify-between border border-blue-600/20 hover:border-blue-500/20 transition-colors">
             <div className="flex items-center">
               <div className={`bg-white rounded-full p-2 mr-2`}>
                 <div className="w-6 h-6 flex items-center justify-center">
@@ -293,15 +293,15 @@ export default function SwapInterface() {
                 </div>
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center text-[#F6411B] font-bold text-lg focus:outline-none">
+                <DropdownMenuTrigger className="flex items-center text-blue-600 font-bold text-lg focus:outline-none">
                   {fromCurrency}
-                  <ChevronDown className="ml-1 h-5 w-5 text-[#F6411B]/70" />
+                  <ChevronDown className="ml-1 h-5 w-5 text-blue-600/70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-white/90 text-[#F6411B] border-[#F6411B]/20">
+                <DropdownMenuContent className="bg-white/90 text-blue-600 border-blue-600/20">
                   {currencies.map((currency) => (
                     <DropdownMenuItem
                       key={currency}
-                      className="focus:bg-[#F6411B]/20 cursor-pointer"
+                      className="focus:bg-blue-600/20 cursor-pointer"
                       onClick={() => setFromCurrency(currency)}
                     >
                       <div className="flex items-center justify-between w-full">
@@ -324,7 +324,7 @@ export default function SwapInterface() {
               type="text"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
-              className="bg-transparent border-none text-[#F6411B] text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-transparent border-none text-blue-600 text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
         </div>
@@ -333,17 +333,17 @@ export default function SwapInterface() {
         <div className="flex justify-center my-4">
           <button
             onClick={handleSwap}
-            className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 p-1 rounded-full border border-[#F6411B]/20 hover:border-yellow-500/20 hover:from-[#F6411B]/20 hover:to-yellow-500/20 transition-all"
+            className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 p-1 rounded-full border border-blue-600/20 hover:border-blue-500/20 hover:from-blue-600/20 hover:to-blue-500/20 transition-all"
           >
-            <ArrowDown className="h-6 w-6 text-[#F6411B]" />
+            <ArrowDown className="h-6 w-6 text-blue-600" />
           </button>
         </div>
 
         {/* To Section */}
         <div className="mb-4">
           <div className="flex justify-between mb-2">
-            <p className="text-[#F6411B]">To</p>
-            <p className="text-[#F6411B]/70 text-sm">
+            <p className="text-blue-600">To</p>
+            <p className="text-blue-600/70 text-sm">
               Balance: {totalToBalance} {toCurrency}
               {parseFloat(swappedAmount) > 0 && (
                 <span className="text-green-500 ml-2">
@@ -352,7 +352,7 @@ export default function SwapInterface() {
               )}
             </p>
           </div>
-          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-2xl p-4 flex items-center justify-between border border-[#F6411B]/20 hover:border-yellow-500/20 transition-colors">
+          <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex items-center justify-between border border-blue-600/20 hover:border-blue-500/20 transition-colors">
             <div className="flex items-center">
               <div className={`bg-white rounded-full p-2 mr-2`}>
                 <div className="w-6 h-6 flex items-center justify-center">
@@ -360,15 +360,15 @@ export default function SwapInterface() {
                 </div>
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center text-[#F6411B] font-bold text-lg focus:outline-none">
+                <DropdownMenuTrigger className="flex items-center text-blue-600 font-bold text-lg focus:outline-none">
                   {toCurrency}
-                  <ChevronDown className="ml-1 h-5 w-5 text-[#F6411B]/70" />
+                  <ChevronDown className="ml-1 h-5 w-5 text-blue-600/70" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-white/90 text-[#F6411B] border-[#F6411B]/20">
+                <DropdownMenuContent className="bg-white/90 text-blue-600 border-blue-600/20">
                   {currencies.map((currency) => (
                     <DropdownMenuItem
                       key={currency}
-                      className="focus:bg-[#F6411B]/20 cursor-pointer"
+                      className="focus:bg-blue-600/20 cursor-pointer"
                       onClick={() => setToCurrency(currency)}
                     >
                       <div className="flex items-center justify-between w-full">
@@ -391,18 +391,18 @@ export default function SwapInterface() {
               type="text"
               value={toAmount}
               onChange={(e) => setToAmount(e.target.value)}
-              className="bg-transparent border-none text-[#F6411B] text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-transparent border-none text-blue-600 text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
         </div>
 
         {/* Rate Display */}
         <div className="flex justify-between mb-4">
-          <span className="text-[#F6411B]">Sell {fromCurrency} at rate</span>
+          <span className="text-blue-600">Sell {fromCurrency} at rate</span>
           <button
             onClick={getMarketRate}
             disabled={loading}
-            className="text-yellow-500 cursor-pointer hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-blue-500 cursor-pointer hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Loading..." : "Set market rate"}
           </button>
@@ -410,20 +410,20 @@ export default function SwapInterface() {
 
         {/* Rate Card */}
         <div className="flex">
-          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-l-xl p-4 flex-1 border border-[#F6411B]/20">
-            <span className="text-[#F6411B] block">{toCurrency}</span>
+          <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex-1 border border-blue-600/20">
+            <span className="text-blue-600 block">{toCurrency}</span>
             <div className="flex items-baseline">
-              <span className="text-[#F6411B] text-xl font-bold">
+              <span className="text-blue-600 text-xl font-bold">
                 {marketRate.toFixed(6)}
               </span>
-              <span className="text-yellow-500/70 text-sm ml-2">
+              <span className="text-blue-500/70 text-sm ml-2">
                 ~{(marketRate * 2.63).toFixed(2)} USD
               </span>
             </div>
           </div>
-          <div className="bg-gradient-to-r from-[#F6411B]/10 to-yellow-500/10 rounded-r-xl p-4 flex-1 border border-[#F6411B]/20 border-l-0">
-            <span className="text-[#F6411B] block">Min Amount</span>
-            <span className="text-[#F6411B] text-xl font-bold">
+          <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex-1 border border-blue-600/20 border-l-0">
+            <span className="text-blue-600 block">Min Amount</span>
+            <span className="text-blue-600 text-xl font-bold">
               {(
                 parseFloat(toAmount) *
                 (1 - (Math.random() * 0.007 + 0.004))
@@ -434,12 +434,12 @@ export default function SwapInterface() {
       </div>
 
       {/* Trade Settings Card */}
-      <div className="bg-gradient-to-br backdrop-blur-sm from-[#F6411B]/5 to-yellow-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
+      <div className="bg-gradient-to-br backdrop-blur-sm from-blue-600/5 to-blue-500/5 rounded-none p-5 shadow-lg border border-blue-600/20">
         {/* Total Trades */}
         <div className="mb-6">
           <div className="flex justify-between mb-2">
-            <span className="text-[#F6411B]">Expiry</span>
-            <span className="text-[#F6411B] font-bold">
+            <span className="text-blue-600">Expiry</span>
+            <span className="text-blue-600 font-bold">
               {totalTrades} {maxDuration}
             </span>
           </div>
@@ -454,7 +454,7 @@ export default function SwapInterface() {
               >
                 <path
                   d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                  fill="#F6411B"
+                  fill="blue"
                 />
                 <path
                   d="M12 6V12L16 14"
@@ -467,7 +467,8 @@ export default function SwapInterface() {
             </div>
             <Slider
               defaultValue={[totalTrades]}
-              max={10}
+              min={1}
+              max={5}
               step={1}
               onValueChange={(value) => setTotalTrades(value[0])}
               className="flex-1"

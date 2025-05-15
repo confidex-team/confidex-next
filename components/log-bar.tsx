@@ -43,11 +43,11 @@ export const LogBar = () => {
 
   return (
     <div className="max-w-md backdrop-blur-sm w-full space-y-4">
-      <div className="bg-gradient-to-br from-[#F6411B]/5 to-blue-500/5 rounded-3xl p-5 shadow-lg border border-[#F6411B]/20">
+      <div className="bg-gradient-to-br from-blue-500/5 to-blue-600/5 rounded-none p-5 shadow-lg border border-blue-500/20">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[#F6411B] text-lg font-bold">Transaction Logs</h2>
+          <h2 className="text-blue-600 text-lg font-bold">Transaction Logs</h2>
           <button
-            className="px-3 py-1.5 bg-gradient-to-r from-[#F6411B]/10 to-blue-500/10 hover:from-[#F6411B]/20 hover:to-blue-500/20 text-[#F6411B] rounded-xl transition-all flex items-center gap-2 text-sm border border-[#F6411B]/20 hover:border-blue-500/20"
+            className="px-3 py-1.5 bg-gradient-to-r from-blue-600/10 to-blue-500/10 hover:from-blue-600/20 hover:to-blue-500/20 text-blue-500 rounded-none transition-all flex items-center gap-2 text-sm border border-blue-500/20 hover:border-blue-500/20"
             onClick={() => {
               setLoading(true);
               matchingEngine

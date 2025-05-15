@@ -64,6 +64,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-space-grotesk;
+  }
+  html {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
   }
 }

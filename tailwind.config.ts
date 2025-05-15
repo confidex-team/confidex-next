@@ -39,6 +39,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
         kanit: ["var(--font-kanit)", ...defaultTheme.fontFamily.sans],
+        "space-grotesk": ["var(--font-space-grotesk)", ...defaultTheme.fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -4,14 +4,14 @@ import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { hardhat, sepolia } from "wagmi/chains";
+import { baseSepolia, hardhat } from "wagmi/chains";
 
 const queryClient = new QueryClient();
 
 const config = getDefaultConfig({
   appName: "Solidity Next.js Starter",
   projectId: process.env.NEXT_PUBLIC_RAINBOWKIT_PROJECT_ID ?? "",
-  chains: [hardhat, sepolia],
+  chains: [baseSepolia, hardhat, ],
   ssr: true,
 });
 

@@ -1,8 +1,13 @@
+import { LogBar } from "@/components/log-bar";
+import MatrixBackground from "@/components/matrix-background";
+import SwapInterface from "@/components/swap-interface";
 import React from "react";
 const page = () => {
   return (
-    <div className="flex flex-row justify-around items-center p-20 pt-4 bg-gradient-to-br from-white via-orange-50 to-orange-200">
-      CERC20
+    <div className="flex flex-row justify-around items-center p-20 pt-4 ">
+      <MatrixBackground hover={false} />
+      <SwapInterface/>
+      <LogBar/>
     </div>
   );
 };

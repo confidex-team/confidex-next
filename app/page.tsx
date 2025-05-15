@@ -1,22 +1,24 @@
 import { Wrapper } from "@/components/Wrapper";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import MatrixBackground from "@/components/matrix-background";
 
 const Home = () => {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-white via-orange-50 to-orange-200 relative">
+    <main className="min-h-screen  relative">
+      <MatrixBackground hover={true} />
       <Wrapper>
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] w-full px-4">
           {/* Hero Section */}
           <div className="text-center w-full max-w-4xl mx-auto space-y-8">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#F6411B]/20 to-orange-500/20 blur-3xl rounded-full" />
-              <h1 className="relative text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-[#F6411B] to-orange-500 bg-clip-text text-transparent">
+              <div className="absolute inset-0 rounded-full" />
+              <h1 className="relative text-6xl md:text-7xl font-extrabold bg-gradient-to-tr from-blue-500 to-blue-900 bg-clip-text text-transparent">
                 Confidex
               </h1>
             </div>
 
-            <p className="text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto leading-relaxed">
               A TEE-based private order book DEX with CoW completely preventing
               front-running & MEV.
             </p>
@@ -24,7 +26,7 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
               <Link
                 href="/swap"
-                className="group flex items-center gap-2 px-8 py-4 backdrop-blur-sm bg-[#F6411B] text-white rounded-xl font-semibold hover:bg-[#F6411B]/90 transition-all hover:shadow-lg hover:shadow-[#F6411B]/20"
+                className="group flex items-center gap-2 px-8 py-4 backdrop-blur-sm bg-blue-600 text-white rounded-none font-semibold hover:bg-blue-500/90 transition-all hover:shadow-lg hover:shadow-blue-500/20"
               >
                 Launch App
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -34,10 +36,10 @@ const Home = () => {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 w-full max-w-5xl mx-auto px-4">
-            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-[#F6411B]/20 hover:border-[#F6411B]/40 transition-colors">
-              <div className="w-12 h-12 bg-[#F6411B]/10 rounded-xl flex items-center justify-center mb-4">
+            <div className="bg-black/10 backdrop-blur-sm p-6 rounded-none border border-blue-600/20 hover:border-blue-600/40 transition-colors">
+              <div className="w-12 h-12 bg-blue-600/10 rounded-none flex items-center justify-center mb-4">
                 <svg
-                  className="w-6 h-6 text-[#F6411B]"
+                  className="w-6 h-6 text-blue-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -50,7 +52,7 @@ const Home = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-[#F6411B] mb-2">
+              <h3 className="text-xl font-semibold text-blue-600 mb-2">
                 Secure Trading
               </h3>
               <p className="text-gray-600">
@@ -59,10 +61,10 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-[#F6411B]/20 hover:border-[#F6411B]/40 transition-colors">
-              <div className="w-12 h-12 bg-[#F6411B]/10 rounded-xl flex items-center justify-center mb-4">
+            <div className="bg-black/10 backdrop-blur-sm p-6 rounded-none border border-blue-600/20 hover:border-blue-600/40 transition-colors">
+              <div className="w-12 h-12 bg-blue-600/10 rounded-none flex items-center justify-center mb-4">
                 <svg
-                  className="w-6 h-6 text-[#F6411B]"
+                  className="w-6 h-6 text-blue-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -75,7 +77,7 @@ const Home = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-[#F6411B] mb-2">
+              <h3 className="text-xl font-semibold text-blue-600 mb-2">
                 No Front-Running
               </h3>
               <p className="text-gray-600">
@@ -84,10 +86,10 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-[#F6411B]/20 hover:border-[#F6411B]/40 transition-colors">
-              <div className="w-12 h-12 bg-[#F6411B]/10 rounded-xl flex items-center justify-center mb-4">
+            <div className="bg-black/10 backdrop-blur-sm p-6 rounded-none border border-blue-600/20 hover:border-blue-600/40 transition-colors">
+              <div className="w-12 h-12 bg-blue-600/10 rounded-none flex items-center justify-center mb-4">
                 <svg
-                  className="w-6 h-6 text-[#F6411B]"
+                  className="w-6 h-6 text-blue-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -100,7 +102,7 @@ const Home = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-[#F6411B] mb-2">
+              <h3 className="text-xl font-semibold text-blue-600 mb-2">
                 Fair Pricing
               </h3>
               <p className="text-gray-600">

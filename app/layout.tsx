@@ -22,8 +22,8 @@ const fontKanit = Kanit({
 });
 
 export const metadata: Metadata = {
-  title: "SoloPatty",
-  description: "Fair Trade, Dont get sandwiched!",
+  title: "Confidex",
+  description: "Fair Trade with confidentiality!",
 };
 
 export default function RootLayout({

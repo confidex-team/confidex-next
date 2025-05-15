@@ -34,7 +34,7 @@ export default function SwapInterface() {
   >("idle");
 
   const currencies = ["Patty", "Cheese", "Lettuce"];
-  const timeUnits = ["Min", "Hour", "Day"];
+//   const timeUnits = ["Min", "Hour", "Day"];
 
   const tokenAddressMap: Record<string, `0x${string}`> = {
     Patty: "0xCAdaFeDf40140C8eBCa3A0E802dfC4dD72869c9F",
@@ -164,7 +164,7 @@ export default function SwapInterface() {
   };
 
   const getButtonText = () => {
-    if (!isConnected) return "Connect Wallet";
+    if (!isConnected) return "Connect Your Wallet";
     switch (swapStage) {
       case "depositing":
         return "Depositing...";

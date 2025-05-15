@@ -17,7 +17,7 @@ const Header = () => {
             href="/"
             className={`text-2xl font-bold ${
               pathname === "/swap"
-                ? "bg-blue-600/10 text-gray-300 font-semibold"
+                ? "bg-blue-600/90 text-gray-300 font-semibold"
                 : "bg-blue-600 hover:text-blue-600 hover:bg-blue-600/5"
             } bg-clip-text text-transparent hover:opacity-80 transition-opacity flex items-center gap-2`}
           >
@@ -35,7 +35,7 @@ const Header = () => {
           <div className="flex items-center gap-8">
             <Link
               href="/swap"
-              className={`px-4 py-2 bg-blue-600/50 rounded-none text-lg transition-all ${
+              className={`px-4 py-[7px] bg-blue-600/50 rounded-none text-lg transition-all ${
                 pathname === "/swap"
                   ? "bg-blue-600/10 text-gray-300 font-semibold"
                   : "text-white hover:text-blue-600 font-semibold hover:bg-gray-600/60"

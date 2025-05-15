@@ -15,9 +15,9 @@ const Header = () => {
         <div className="flex items-center px-24 justify-between h-16">
           <Link
             href="/"
-            className={`text-2xl font-bold ${
+            className={`text-2xl font-extrabold ${
               pathname === "/swap"
-                ? "bg-blue-600/90 text-gray-300 font-semibold"
+                ? "bg-blue-600/90 text-gray-300"
                 : "bg-blue-600 hover:text-blue-600 hover:bg-blue-600/5"
             } bg-clip-text text-transparent hover:opacity-80 transition-opacity flex items-center gap-2`}
           >

@@ -13,7 +13,7 @@ const Home = () => {
           <div className="text-center w-full max-w-4xl mx-auto space-y-8">
             <div className="relative">
               <div className="absolute inset-0 rounded-full" />
-              <h1 className="relative text-6xl md:text-7xl font-extrabold bg-gradient-to-tr from-blue-500 to-blue-900 bg-clip-text text-transparent">
+              <h1 className="relative text-6xl md:text-7xl font-bold bg-gradient-to-tr from-blue-500 to-blue-900 bg-clip-text text-transparent">
                 Confidex
               </h1>
             </div>

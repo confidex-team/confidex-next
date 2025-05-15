@@ -185,7 +185,7 @@ export default function SwapInterface() {
 
   const getButtonClassName = () => {
     const baseClasses =
-      "w-full text-white font-bold py-4 px-6 rounded-none mt-4 transition-colors";
+      "w-full text-white font-bold py-4 px-6 rounded-none mt-0 transition-colors";
     if (!isConnected) {
       return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`;
     }
@@ -281,7 +281,7 @@ export default function SwapInterface() {
         <div className="mb-4">
           <div className="flex justify-between mb-2">
             <p className="text-blue-600">From</p>
-            <p className="text-blue-600/70 text-sm">
+            <p className="text-gray-300/60 text-sm">
               Balance: {fromBalance?.formatted || "0.0"} {fromCurrency}
             </p>
           </div>
@@ -324,7 +324,7 @@ export default function SwapInterface() {
               type="text"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
-              className="bg-transparent border-none text-blue-600 text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-transparent border-none text-gray-300 text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
         </div>
@@ -333,7 +333,7 @@ export default function SwapInterface() {
         <div className="flex justify-center my-4">
           <button
             onClick={handleSwap}
-            className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 p-1 rounded-full border border-blue-600/20 hover:border-blue-500/20 hover:from-blue-600/20 hover:to-blue-500/20 transition-all"
+            className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 p-1 rounded-none border border-blue-600/20 hover:border-blue-500/20 hover:from-blue-600/20 hover:to-blue-500/20 transition-all"
           >
             <ArrowDown className="h-6 w-6 text-blue-600" />
           </button>
@@ -343,7 +343,7 @@ export default function SwapInterface() {
         <div className="mb-4">
           <div className="flex justify-between mb-2">
             <p className="text-blue-600">To</p>
-            <p className="text-blue-600/70 text-sm">
+            <p className="text-gray-300/60 text-sm">
               Balance: {totalToBalance} {toCurrency}
               {parseFloat(swappedAmount) > 0 && (
                 <span className="text-green-500 ml-2">
@@ -391,7 +391,7 @@ export default function SwapInterface() {
               type="text"
               value={toAmount}
               onChange={(e) => setToAmount(e.target.value)}
-              className="bg-transparent border-none text-blue-600 text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-transparent border-none text-gray-300 text-2xl font-bold text-right w-24 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
         </div>

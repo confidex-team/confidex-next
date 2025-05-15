@@ -62,7 +62,7 @@ export const LogBar = () => {
             {!loading && "Refresh"}
           </button>
         </div>
-        <div className="h-[400px] overflow-y-auto">
+        <div className="h-[597px] overflow-y-auto">
           <div className="space-y-2">
             {logs.map((log, index) => (
               <LogEntry

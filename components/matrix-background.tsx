@@ -41,7 +41,7 @@ const MatrixBackground: React.FC<{ hover: boolean }> = ({ hover }) => {
     window.addEventListener('resize', resizeCanvas);
 
     // Combined configuration
-    const spacing = 18;
+    const spacing = 19;
     const fontSize = 16;
     let isPhone = window.innerWidth <= 768;
     

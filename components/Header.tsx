@@ -38,7 +38,7 @@ const Header = () => {
               className={`px-4 py-2 bg-blue-600/50 rounded-none text-lg transition-all ${
                 pathname === "/swap"
                   ? "bg-blue-600/10 text-gray-300 font-semibold"
-                  : "text-white hover:text-blue-600 font-semibold hover:bg-blue-600/5"
+                  : "text-white hover:text-blue-600 font-semibold hover:bg-gray-600/60"
               }`}
             >
               Swap

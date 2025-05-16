@@ -17,9 +17,6 @@ export const EncryptedBalance = ({ encryptedBalance, tokenSymbol }: EncryptedBal
   const [decryptedValue, setDecryptedValue] = useState<string | null>(null);
   const { data: walletClient } = useWalletClient();
 
-  // Add debug logs
-  console.log('EncryptedBalance props:', { encryptedBalance, tokenSymbol });
-  console.log('Wallet client:', walletClient);
 
   const handleToggle = async () => {
     if (!isDecrypted && walletClient) {

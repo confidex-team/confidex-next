@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { ChevronDown, ArrowDown, Check } from "lucide-react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { useAccount, useContractRead } from "wagmi"
+import { useAccount, useWriteContract, useReadContract } from "wagmi"
 import { Slider } from "@/components/ui/slider"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
@@ -22,6 +22,7 @@ import { EncryptedBalance } from './EncryptedBalance'
 import { Hex } from 'viem'
 import cCMFAbi from '@/abi/cCMF.json'
 import cUSDCAbi from '@/abi/cUSDC.json'
+import approveFunctionAbi from '@/abi/approveABI.json'
 
 export default function SwapInterface() {
   const [totalTrades, setTotalTrades] = useState(1)
@@ -43,7 +44,7 @@ export default function SwapInterface() {
   const chainId = supportedChains.baseSepolia
   const zap = Lightning.latest("testnet", chainId) // Connect to Inco's latest public testnet
 
-  const dappAddress = "0xb8BCD03794B61210dc21f0a6e4Ac89569B4eC21B" // Put your contract address here
+  const dappAddress = "0x8f5E5B9282893F2A9CAE19569Be525Cf22a44AbE" // Put your contract address here
 
   const currencies = ["cCMF", "cUSDC"]
   //   const timeUnits = ["Min", "Hour", "Day"];
@@ -53,46 +54,39 @@ export default function SwapInterface() {
     cUSDC: "0xb1f7Ed5e2D4407822761cbf302466A2F371d3ACf",
   }
 
-  // Add debug logs for addresses
-  console.log('Token Addresses:', {
-    cCMF: tokenAddressMap.cCMF,
-    cUSDC: tokenAddressMap.cUSDC,
-    userAddress: address
-  })
-
   // Replace useBalance with useContractRead
-  const { data: fromEncryptedBalance, isError: fromError } = useContractRead({
+  const { data: fromEncryptedBalance, isError: fromError } = useReadContract({
     address: tokenAddressMap[fromCurrency],
     abi: fromCurrency === 'cCMF' ? cCMFAbi : cUSDCAbi,
     functionName: 'balanceOf',
     args: [address],
   })
 
-  const { data: toEncryptedBalance, isError: toError } = useContractRead({
+  const { data: toEncryptedBalance, isError: toError } = useReadContract({
     address: tokenAddressMap[toCurrency],
     abi: toCurrency === 'cCMF' ? cCMFAbi : cUSDCAbi,
     functionName: 'balanceOf',
     args: [address],
   })
 
-  // Add debug logs
-  console.log('From Encrypted Balance:', {
-    balance: fromEncryptedBalance,
-    error: fromError,
-    currency: fromCurrency,
-    address: tokenAddressMap[fromCurrency]
-  })
-  console.log('To Encrypted Balance:', {
-    balance: toEncryptedBalance,
-    error: toError,
-    currency: toCurrency,
-    address: tokenAddressMap[toCurrency]
-  })
+//   // Add debug logs
+//   console.log('From Encrypted Balance:', {
+//     balance: fromEncryptedBalance,
+//     error: fromError,
+//     currency: fromCurrency,
+//     address: tokenAddressMap[fromCurrency]
+//   })
+//   console.log('To Encrypted Balance:', {
+//     balance: toEncryptedBalance,
+//     error: toError,
+//     currency: toCurrency,
+//     address: tokenAddressMap[toCurrency]
+//   })
 
   // Calculate total balance including swapped amount
-  const totalToBalance = toEncryptedBalance
-    ? (parseFloat(toEncryptedBalance.toString()) + parseFloat(swappedAmount)).toFixed(6)
-    : swappedAmount
+//   const totalToBalance = toEncryptedBalance
+//     ? (parseFloat(toEncryptedBalance.toString()) + parseFloat(swappedAmount)).toFixed(6)
+//     : swappedAmount
 
   const handleSwap = () => {
     if (!isConnected) return
@@ -114,6 +108,9 @@ export default function SwapInterface() {
     },
   })
 
+  const { writeContractAsync } = useWriteContract()
+  
+
   const handleMainSwap = async () => {
     if (!isConnected || !address) return
     setSwapStage("depositing")
@@ -121,16 +118,41 @@ export default function SwapInterface() {
 
     try {
       // Encrypt the amount
+
+      console.log("inside handleMainSwap")
       const plaintext = parseFloat(fromAmount) * 10 ** 18
-      const encryptedAmount = await zap.encrypt(plaintext, {
+      const encryptedAmountforApprove = await zap.encrypt(plaintext, {
+        accountAddress: address,
+        dappAddress: tokenAddressMap[fromCurrency],
+      })
+
+      console.log("🔐 Encrypted amount:", encryptedAmountforApprove)
+
+      // First approve the dapp to spend tokens
+      try {
+        console.log("🔑 Approving tokens...")
+        const approveTx = await writeContractAsync({
+          address: tokenAddressMap[fromCurrency],
+          abi: approveFunctionAbi as any,
+          functionName: 'approve',
+          args: [dappAddress, encryptedAmountforApprove],
+        })
+        console.log("✅ Approval transaction submitted:", approveTx)
+        
+        // Wait for approval transaction to be mined
+        await new Promise((resolve) => setTimeout(resolve, 3000))
+      } catch (approveError) {
+        console.error("❌ Approval failed:", approveError)
+        throw approveError
+      }
+
+      const encryptedAmountforDeposit = await zap.encrypt(plaintext, {
         accountAddress: address,
         dappAddress,
       })
 
-      console.log("🔐 Encrypted amount:", encryptedAmount)
-
       // Now use the encrypted amount for deposit
-      const txHash = await depositTokens?.(encryptedAmount)
+      const txHash = await depositTokens?.(encryptedAmountforDeposit)
       if (txHash) {
         console.log("✅ Deposit transaction submitted:", txHash)
         await matchingEngine.initiateDeposit(txHash)
@@ -331,14 +353,14 @@ export default function SwapInterface() {
             <p className="text-blue-600">From</p>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-500">Balance:</span>
-              {fromEncryptedBalance && address && (
+              {fromEncryptedBalance && address ? (
                 <div>
                   <EncryptedBalance 
                     encryptedBalance={fromEncryptedBalance as Hex} 
                     tokenSymbol={fromCurrency} 
                   />
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
           <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex items-center justify-between border border-blue-600/20 hover:border-blue-500/20 transition-colors">
@@ -401,14 +423,14 @@ export default function SwapInterface() {
             <p className="text-blue-600">To</p>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-500">Balance:</span>
-              {toEncryptedBalance && address && (
+              {toEncryptedBalance && address ? (
                 <div>
                   <EncryptedBalance 
                     encryptedBalance={toEncryptedBalance as Hex} 
                     tokenSymbol={toCurrency} 
                   />
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
           <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex items-center justify-between border border-blue-600/20 hover:border-blue-500/20 transition-colors">

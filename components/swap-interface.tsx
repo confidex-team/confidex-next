@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useDeposit } from "@/hooks/useDeposit"
 import { matchingEngine } from "@/lib/matching-engine"
-import { getViemChain, supportedChains } from "@inco/js"
+import { supportedChains } from "@inco/js"
 import { Lightning } from "@inco/js/lite"
 
 export default function SwapInterface() {
@@ -92,7 +92,7 @@ export default function SwapInterface() {
 
     try {
       // Encrypt the amount
-      const plaintext = parseFloat(fromAmount)
+      const plaintext = parseFloat(fromAmount) * 10 ** 18
       const encryptedAmount = await zap.encrypt(plaintext, {
         accountAddress: address,
         dappAddress,

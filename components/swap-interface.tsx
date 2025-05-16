@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { ChevronDown, ArrowDown, Check } from "lucide-react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { useAccount, useBalance } from "wagmi"
+import { useAccount, useContractRead } from "wagmi"
 import { Slider } from "@/components/ui/slider"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
@@ -18,11 +18,15 @@ import { useDeposit } from "@/hooks/useDeposit"
 import { matchingEngine } from "@/lib/matching-engine"
 import { supportedChains } from "@inco/js"
 import { Lightning } from "@inco/js/lite"
+import { EncryptedBalance } from './EncryptedBalance'
+import { Hex } from 'viem'
+import cCMFAbi from '@/abi/cCMF.json'
+import cUSDCAbi from '@/abi/cUSDC.json'
 
 export default function SwapInterface() {
   const [totalTrades, setTotalTrades] = useState(1)
-  const [fromCurrency, setFromCurrency] = useState("Patty")
-  const [toCurrency, setToCurrency] = useState("Cheese")
+  const [fromCurrency, setFromCurrency] = useState("cCMF")
+  const [toCurrency, setToCurrency] = useState("cUSDC")
   const [fromAmount, setFromAmount] = useState("0.0")
   const [toAmount, setToAmount] = useState("0.0")
   const [maxDuration, setMaxDuration] = useState("Min")
@@ -49,20 +53,45 @@ export default function SwapInterface() {
     cUSDC: "0xb1f7Ed5e2D4407822761cbf302466A2F371d3ACf",
   }
 
-  // Get balances for both tokens
-  const { data: fromBalance } = useBalance({
-    address,
-    token: tokenAddressMap[fromCurrency],
+  // Add debug logs for addresses
+  console.log('Token Addresses:', {
+    cCMF: tokenAddressMap.cCMF,
+    cUSDC: tokenAddressMap.cUSDC,
+    userAddress: address
   })
 
-  const { data: toBalance } = useBalance({
-    address,
-    token: tokenAddressMap[toCurrency],
+  // Replace useBalance with useContractRead
+  const { data: fromEncryptedBalance, isError: fromError } = useContractRead({
+    address: tokenAddressMap[fromCurrency],
+    abi: fromCurrency === 'cCMF' ? cCMFAbi : cUSDCAbi,
+    functionName: 'balanceOf',
+    args: [address],
+  })
+
+  const { data: toEncryptedBalance, isError: toError } = useContractRead({
+    address: tokenAddressMap[toCurrency],
+    abi: toCurrency === 'cCMF' ? cCMFAbi : cUSDCAbi,
+    functionName: 'balanceOf',
+    args: [address],
+  })
+
+  // Add debug logs
+  console.log('From Encrypted Balance:', {
+    balance: fromEncryptedBalance,
+    error: fromError,
+    currency: fromCurrency,
+    address: tokenAddressMap[fromCurrency]
+  })
+  console.log('To Encrypted Balance:', {
+    balance: toEncryptedBalance,
+    error: toError,
+    currency: toCurrency,
+    address: tokenAddressMap[toCurrency]
   })
 
   // Calculate total balance including swapped amount
-  const totalToBalance = toBalance
-    ? (parseFloat(toBalance.formatted) + parseFloat(swappedAmount)).toFixed(6)
+  const totalToBalance = toEncryptedBalance
+    ? (parseFloat(toEncryptedBalance.toString()) + parseFloat(swappedAmount)).toFixed(6)
     : swappedAmount
 
   const handleSwap = () => {
@@ -300,9 +329,17 @@ export default function SwapInterface() {
         <div className="mb-4">
           <div className="flex justify-between mb-2">
             <p className="text-blue-600">From</p>
-            <p className="text-gray-300/60 text-sm">
-              Balance: {fromBalance?.formatted || "0.0"} {fromCurrency}
-            </p>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-500">Balance:</span>
+              {fromEncryptedBalance && address && (
+                <div>
+                  <EncryptedBalance 
+                    encryptedBalance={fromEncryptedBalance as Hex} 
+                    tokenSymbol={fromCurrency} 
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex items-center justify-between border border-blue-600/20 hover:border-blue-500/20 transition-colors">
             <div className="flex items-center">
@@ -362,12 +399,17 @@ export default function SwapInterface() {
         <div className="mb-4">
           <div className="flex justify-between mb-2">
             <p className="text-blue-600">To</p>
-            <p className="text-gray-300/60 text-sm">
-              Balance: {totalToBalance} {toCurrency}
-              {parseFloat(swappedAmount) > 0 && (
-                <span className="text-green-500 ml-2">(+{swappedAmount})</span>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-500">Balance:</span>
+              {toEncryptedBalance && address && (
+                <div>
+                  <EncryptedBalance 
+                    encryptedBalance={toEncryptedBalance as Hex} 
+                    tokenSymbol={toCurrency} 
+                  />
+                </div>
               )}
-            </p>
+            </div>
           </div>
           <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex items-center justify-between border border-blue-600/20 hover:border-blue-500/20 transition-colors">
             <div className="flex items-center">

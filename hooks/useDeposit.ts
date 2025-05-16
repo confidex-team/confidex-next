@@ -3,31 +3,31 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi"
-import CONFIDEX_ABI from "@/abi/Confidex.json"
+import { parseUnits } from "viem"
+import Confidex_ABI from "@/abi/Confidex.json"
 
 export const useDeposit = ({
   tokenAddress,
+  amount,
+  decimals = 18,
   onDepositSuccess,
 }: {
   tokenAddress?: `0x${string}`
+  amount?: string
+  decimals?: number
   onDepositSuccess?: () => void
 }) => {
   const { writeContractAsync } = useWriteContract()
   const { address } = useAccount()
 
-  const depositTokens = async (
-    encryptedAmount: `0x${string}`
-  ): Promise<`0x${string}`> => {
-    if (!tokenAddress || !encryptedAmount || !address) {
-      throw new Error("Missing required parameters")
-    }
+  const depositTokens = async (): Promise<`0x${string}`> => {
+    if (!tokenAddress || !amount || !address) throw new Error("Missing params")
 
     const txHash = await writeContractAsync({
-      address: process.env
-        .NEXT_PUBLIC_CONFIDEX_CONTRACT_ADDRESS as `0x${string}`,
-      abi: CONFIDEX_ABI,
+      address: "0xb8BCD03794B61210dc21f0a6e4Ac89569B4eC21B" as `0x${string}`,
+      abi: Confidex_ABI,
       functionName: "depositToken",
-      args: [tokenAddress, encryptedAmount],
+      args: [tokenAddress, parseUnits(amount, decimals)],
       account: address,
     })
 

@@ -18,7 +18,6 @@ import { useDeposit } from "@/hooks/useDeposit"
 import { matchingEngine } from "@/lib/matching-engine"
 import { getViemChain, supportedChains } from "@inco/js"
 import { Lightning } from "@inco/js/lite"
-import { createWalletClient, http } from "viem"
 
 export default function SwapInterface() {
   const [totalTrades, setTotalTrades] = useState(1)
@@ -42,13 +41,12 @@ export default function SwapInterface() {
 
   const dappAddress = "0xb8BCD03794B61210dc21f0a6e4Ac89569B4eC21B" // Put your contract address here
 
-  const currencies = ["Patty", "Cheese", "Lettuce"]
+  const currencies = ["cCMF", "cUSDC"]
   //   const timeUnits = ["Min", "Hour", "Day"];
 
   const tokenAddressMap: Record<string, `0x${string}`> = {
-    Patty: "0xCAdaFeDf40140C8eBCa3A0E802dfC4dD72869c9F",
-    Cheese: "0xC9EbB17FC1f5101Db84EA345693194c520b411bb",
-    Lettuce: "0xa966bdf941ea2eccc8ADC453B977FFeE27bC2f55",
+    cCMF: "0x89216c9a98E82d6F0Fef2f20E9b9A5840E63d8a5",
+    cUSDC: "0xb1f7Ed5e2D4407822761cbf302466A2F371d3ACf",
   }
 
   // Get balances for both tokens

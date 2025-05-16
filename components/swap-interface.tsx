@@ -1,119 +1,136 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { ChevronDown, ArrowDown, Check } from "lucide-react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount, useBalance } from "wagmi";
-import { Slider } from "@/components/ui/slider";
-import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import axios from "axios";
+import { useState, useEffect } from "react"
+import { ChevronDown, ArrowDown, Check } from "lucide-react"
+import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { useAccount, useBalance } from "wagmi"
+import { Slider } from "@/components/ui/slider"
+import { Input } from "@/components/ui/input"
+import Image from "next/image"
+import axios from "axios"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useDeposit } from "@/hooks/useDeposit";
-import { matchingEngine } from "@/lib/matching-engine";
+} from "@/components/ui/dropdown-menu"
+import { useDeposit } from "@/hooks/useDeposit"
+import { matchingEngine } from "@/lib/matching-engine"
+import { getViemChain, supportedChains } from "@inco/js"
+import { Lightning } from "@inco/js/lite"
+import { createWalletClient, http } from "viem"
 
 export default function SwapInterface() {
-  const [totalTrades, setTotalTrades] = useState(1);
-  const [fromCurrency, setFromCurrency] = useState("Patty");
-  const [toCurrency, setToCurrency] = useState("Cheese");
-  const [fromAmount, setFromAmount] = useState("0.0");
-  const [toAmount, setToAmount] = useState("0.0");
-  const [maxDuration, setMaxDuration] = useState("Min");
-  const [maxDurationValue, setMaxDurationValue] = useState("4");
-  const [marketRate, setMarketRate] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [swappedAmount, setSwappedAmount] = useState("0.0");
-  const { isConnected, address } = useAccount();
+  const [totalTrades, setTotalTrades] = useState(1)
+  const [fromCurrency, setFromCurrency] = useState("Patty")
+  const [toCurrency, setToCurrency] = useState("Cheese")
+  const [fromAmount, setFromAmount] = useState("0.0")
+  const [toAmount, setToAmount] = useState("0.0")
+  const [maxDuration, setMaxDuration] = useState("Min")
+  const [maxDurationValue, setMaxDurationValue] = useState("4")
+  const [marketRate, setMarketRate] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [swappedAmount, setSwappedAmount] = useState("0.0")
+  const { isConnected, address } = useAccount()
   const [swapStage, setSwapStage] = useState<
     "idle" | "depositing" | "matching" | "match_found" | "claiming"
-  >("idle");
+  >("idle")
 
-  const currencies = ["Patty", "Cheese", "Lettuce"];
-//   const timeUnits = ["Min", "Hour", "Day"];
+  // Setup: do it once at initialization
+  const chainId = supportedChains.baseSepolia
+  const zap = Lightning.latest("testnet", chainId) // Connect to Inco's latest public testnet
+
+  const dappAddress = "0xb8BCD03794B61210dc21f0a6e4Ac89569B4eC21B" // Put your contract address here
+
+  const currencies = ["Patty", "Cheese", "Lettuce"]
+  //   const timeUnits = ["Min", "Hour", "Day"];
 
   const tokenAddressMap: Record<string, `0x${string}`> = {
     Patty: "0xCAdaFeDf40140C8eBCa3A0E802dfC4dD72869c9F",
     Cheese: "0xC9EbB17FC1f5101Db84EA345693194c520b411bb",
     Lettuce: "0xa966bdf941ea2eccc8ADC453B977FFeE27bC2f55",
-  };
+  }
 
   // Get balances for both tokens
   const { data: fromBalance } = useBalance({
     address,
     token: tokenAddressMap[fromCurrency],
-  });
+  })
 
   const { data: toBalance } = useBalance({
     address,
     token: tokenAddressMap[toCurrency],
-  });
+  })
 
   // Calculate total balance including swapped amount
-  const totalToBalance = toBalance ? 
-    (parseFloat(toBalance.formatted) + parseFloat(swappedAmount)).toFixed(6) : 
-    swappedAmount;
+  const totalToBalance = toBalance
+    ? (parseFloat(toBalance.formatted) + parseFloat(swappedAmount)).toFixed(6)
+    : swappedAmount
 
   const handleSwap = () => {
-    if (!isConnected) return;
+    if (!isConnected) return
 
     // Swap currencies and amounts
-    setFromCurrency(toCurrency);
-    setToCurrency(fromCurrency);
-    setFromAmount(toAmount);
-    setToAmount(fromAmount);
-  };
+    setFromCurrency(toCurrency)
+    setToCurrency(fromCurrency)
+    setFromAmount(toAmount)
+    setToAmount(fromAmount)
+  }
 
   const { depositTokens } = useDeposit({
     tokenAddress: tokenAddressMap[fromCurrency],
-    amount: fromAmount,
-    decimals: 18,
     onDepositSuccess: () => {
-      setSwapStage("matching");
+      setSwapStage("matching")
       setTimeout(() => {
-        setSwapStage("idle");
-      }, 2000);
+        setSwapStage("idle")
+      }, 2000)
     },
-  });
+  })
 
   const handleMainSwap = async () => {
-    if (!isConnected) return;
-    setSwapStage("depositing");
-    setSwappedAmount("0.0"); // Reset swapped amount at start of new swap
+    if (!isConnected || !address) return
+    setSwapStage("depositing")
+    setSwappedAmount("0.0") // Reset swapped amount at start of new swap
 
     try {
-      const txHash = await depositTokens?.();
+      // Encrypt the amount
+      const plaintext = parseFloat(fromAmount)
+      const encryptedAmount = await zap.encrypt(plaintext, {
+        accountAddress: address,
+        dappAddress,
+      })
+
+      console.log("🔐 Encrypted amount:", encryptedAmount)
+
+      // Now use the encrypted amount for deposit
+      const txHash = await depositTokens?.(encryptedAmount)
       if (txHash) {
-        console.log("✅ Deposit transaction submitted:", txHash);
-        await matchingEngine.initiateDeposit(txHash);
-        
+        console.log("✅ Deposit transaction submitted:", txHash)
+        await matchingEngine.initiateDeposit(txHash)
+
         // Simulate deposit confirmation with longer delay
         setTimeout(async () => {
-          await matchingEngine.depositConfirmed();
-          setSwapStage("matching");
-          
+          await matchingEngine.depositConfirmed()
+          setSwapStage("matching")
+
           // Simulate intent submission with longer delay
           setTimeout(async () => {
-            await matchingEngine.intentsSubmitted();
-            
+            await matchingEngine.intentsSubmitted()
+
             // Simulate finding matches and completing swap with longer delays
             setTimeout(async () => {
-              await matchingEngine.matchesFound();
-              setSwapStage("match_found");
-              
+              await matchingEngine.matchesFound()
+              setSwapStage("match_found")
+
               // Add delay before sending tokens
               setTimeout(async () => {
-                await matchingEngine.tokensSent();
-                setSwappedAmount(toAmount); // Set the swapped amount when swap completes
-                setSwapStage("idle");
-              }, 3000);
-            }, 4000);
-          }, 9500);
-        }, 3000);
+                await matchingEngine.tokensSent()
+                setSwappedAmount(toAmount) // Set the swapped amount when swap completes
+                setSwapStage("idle")
+              }, 3000)
+            }, 4000)
+          }, 9500)
+        }, 3000)
 
         try {
           console.log("🔄 Submitting intent with data:", {
@@ -122,72 +139,76 @@ export default function SwapInterface() {
             toToken: tokenAddressMap[toCurrency],
             amount: fromAmount,
             receive: toAmount,
-            expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString()
-          });
+            expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString(),
+          })
 
           // Add 3 second delay before sending the request
-          await new Promise(resolve => setTimeout(resolve, 4000));
-          console.log(".");
+          await new Promise((resolve) => setTimeout(resolve, 4000))
+          console.log(".")
 
-          const response = await axios.post("http://localhost:3000/intent/submit", {
-            user: address,
-            fromToken: tokenAddressMap[fromCurrency],
-            toToken: tokenAddressMap[toCurrency],
-            amount: fromAmount,
-            receive: toAmount,
-            expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString() // 3 minutes from now
-          });
+          const response = await axios.post(
+            "http://localhost:3000/intent/submit",
+            {
+              user: address,
+              fromToken: tokenAddressMap[fromCurrency],
+              toToken: tokenAddressMap[toCurrency],
+              amount: fromAmount,
+              receive: toAmount,
+              expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString(), // 3 minutes from now
+            }
+          )
 
-          console.log("✅ Intent submission successful:", response.data);
+          console.log("✅ Intent submission successful:", response.data)
         } catch (error) {
-          console.error("❌ Intent submission failed:", error);
+          console.error("❌ Intent submission failed:", error)
           if (axios.isAxiosError(error)) {
             console.error("Axios error details:", {
               status: error.response?.status,
               statusText: error.response?.statusText,
-              data: error.response?.data
-            });
+              data: error.response?.data,
+            })
           }
-          throw error; // Re-throw to be caught by the outer try-catch
+          throw error // Re-throw to be caught by the outer try-catch
         }
-
       } else {
-        console.warn("⚠️ depositTokens returned undefined.");
-        await matchingEngine.depositFailed("Transaction failed to submit");
-        setSwapStage("idle");
+        console.warn("⚠️ depositTokens returned undefined.")
+        await matchingEngine.depositFailed("Transaction failed to submit")
+        setSwapStage("idle")
       }
     } catch (err) {
-      console.error("❌ Deposit failed:", err);
-      await matchingEngine.depositFailed(err instanceof Error ? err.message : "Unknown error");
-      setSwapStage("idle");
+      console.error("❌ Deposit failed:", err)
+      await matchingEngine.depositFailed(
+        err instanceof Error ? err.message : "Unknown error"
+      )
+      setSwapStage("idle")
     }
-  };
+  }
 
   const getButtonText = () => {
-    if (!isConnected) return "Connect Your Wallet";
+    if (!isConnected) return "Connect Your Wallet"
     switch (swapStage) {
       case "depositing":
-        return "Depositing...";
+        return "Depositing..."
       case "matching":
-        return "Matching...";
+        return "Matching..."
       case "match_found":
-        return "Match Found!";
+        return "Match Found!"
       case "claiming":
-        return "Claiming...";
+        return "Claiming..."
       default:
-        return "Swap";
+        return "Swap"
     }
-  };
+  }
 
   const getButtonDisabled = () => {
-    return !isConnected || swapStage !== "idle";
-  };
+    return !isConnected || swapStage !== "idle"
+  }
 
   const getButtonClassName = () => {
     const baseClasses =
-      "w-full text-white font-bold py-4 px-6 rounded-none mt-0 transition-colors";
+      "w-full text-white font-bold py-4 px-6 rounded-none mt-0 transition-colors"
     if (!isConnected) {
-      return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`;
+      return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`
     }
 
     switch (swapStage) {
@@ -195,49 +216,49 @@ export default function SwapInterface() {
       case "matching":
       case "match_found":
       case "claiming":
-        return `${baseClasses} bg-blue-600 opacity-50 cursor-not-allowed`;
+        return `${baseClasses} bg-blue-600 opacity-50 cursor-not-allowed`
       default:
-        return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`;
+        return `${baseClasses} bg-blue-600 hover:bg-blue-600/90`
     }
-  };
+  }
 
   const getMarketRate = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
       const response = await axios.get(
-        `/api/get-market-rate?fromToken=${fromCurrency}&toToken=${toCurrency}`,
-      );
-      setMarketRate(response.data.rate);
+        `/api/get-market-rate?fromToken=${fromCurrency}&toToken=${toCurrency}`
+      )
+      setMarketRate(response.data.rate)
       // Update toAmount based on current fromAmount and new rate
       if (parseFloat(fromAmount) > 0) {
         const newToAmount = (
           parseFloat(fromAmount) * response.data.rate
-        ).toFixed(6);
-        setToAmount(newToAmount);
+        ).toFixed(6)
+        setToAmount(newToAmount)
       }
     } catch (error) {
-      console.error("Error fetching market rate:", error);
+      console.error("Error fetching market rate:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // Update toAmount whenever fromAmount changes
   useEffect(() => {
     if (parseFloat(fromAmount) > 0 && marketRate > 0) {
-      const newToAmount = (parseFloat(fromAmount) * marketRate).toFixed(6);
-      setToAmount(newToAmount);
+      const newToAmount = (parseFloat(fromAmount) * marketRate).toFixed(6)
+      setToAmount(newToAmount)
     } else {
-      setToAmount("0.0");
+      setToAmount("0.0")
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromAmount, marketRate]);
+  }, [fromAmount, marketRate])
 
   // Fetch initial market rate
   useEffect(() => {
-    getMarketRate();
+    getMarketRate()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromCurrency, toCurrency]);
+  }, [fromCurrency, toCurrency])
 
   const getTokenLogo = (currency: string) => {
     if (currency === "Patty") {
@@ -249,7 +270,7 @@ export default function SwapInterface() {
           width={24}
           height={24}
         />
-      );
+      )
     } else if (currency === "Cheese") {
       return (
         <Image
@@ -259,7 +280,7 @@ export default function SwapInterface() {
           width={24}
           height={24}
         />
-      );
+      )
     } else {
       return (
         <Image
@@ -269,9 +290,9 @@ export default function SwapInterface() {
           width={24}
           height={24}
         />
-      );
+      )
     }
-  };
+  }
 
   return (
     <div className="max-w-md w-full space-y-4">
@@ -346,9 +367,7 @@ export default function SwapInterface() {
             <p className="text-gray-300/60 text-sm">
               Balance: {totalToBalance} {toCurrency}
               {parseFloat(swappedAmount) > 0 && (
-                <span className="text-green-500 ml-2">
-                  (+{swappedAmount})
-                </span>
+                <span className="text-green-500 ml-2">(+{swappedAmount})</span>
               )}
             </p>
           </div>
@@ -486,5 +505,5 @@ export default function SwapInterface() {
         </button>
       </div>
     </div>
-  );
+  )
 }

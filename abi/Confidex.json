@@ -101,9 +101,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bytes",
+        "internalType": "euint256",
         "name": "encryptedAmount",
-        "type": "bytes"
+        "type": "bytes32"
       }
     ],
     "name": "Deposited",
@@ -164,9 +164,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bytes",
+        "internalType": "euint256",
         "name": "encryptedAmount",
-        "type": "bytes"
+        "type": "bytes32"
       }
     ],
     "name": "Withdrawn",

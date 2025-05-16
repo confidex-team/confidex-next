@@ -44,14 +44,14 @@ export default function SwapInterface() {
   const chainId = supportedChains.baseSepolia
   const zap = Lightning.latest("testnet", chainId) // Connect to Inco's latest public testnet
 
-  const dappAddress = "0x8f5E5B9282893F2A9CAE19569Be525Cf22a44AbE" // Put your contract address here
+  const dappAddress = "0xeB1F4fd5B3A49ea9569edDD3f12cfABbFAeb42Bc" // Put your contract address here
 
   const currencies = ["cCMF", "cUSDC"]
   //   const timeUnits = ["Min", "Hour", "Day"];
 
   const tokenAddressMap: Record<string, `0x${string}`> = {
-    cCMF: "0x89216c9a98E82d6F0Fef2f20E9b9A5840E63d8a5",
-    cUSDC: "0xb1f7Ed5e2D4407822761cbf302466A2F371d3ACf",
+    cCMF: "0x144481927c78798B5C38890c2E8E777dE27Dfc97",
+    cUSDC: "0x1bC80Bcc4fBB107FCF65D09e84d4c6Ff5E0B9e7B",
   }
 
   // Replace useBalance with useContractRead

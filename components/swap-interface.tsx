@@ -44,7 +44,7 @@ export default function SwapInterface() {
   const chainId = supportedChains.baseSepolia
   const zap = Lightning.latest("testnet", chainId) // Connect to Inco's latest public testnet
 
-  const dappAddress = "0xeB1F4fd5B3A49ea9569edDD3f12cfABbFAeb42Bc" // Put your contract address here
+  const dappAddress = "0x571F608851ABf768F332233A43B6D54240cDA01E" // Put your contract address here
 
   const currencies = ["cCMF", "cUSDC"]
   //   const timeUnits = ["Min", "Hour", "Day"];
@@ -110,7 +110,6 @@ export default function SwapInterface() {
 
   const { writeContractAsync } = useWriteContract()
   
-
   const handleMainSwap = async () => {
     if (!isConnected || !address) return
     setSwapStage("depositing")

@@ -58,6 +58,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "InvalidUser",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -247,24 +252,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
-    ],
-    "name": "recoverTokens",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

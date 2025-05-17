@@ -23,7 +23,7 @@ export const useDeposit = ({
     }
 
     const txHash = await writeContractAsync({
-      address: "0xeB1F4fd5B3A49ea9569edDD3f12cfABbFAeb42Bc" as `0x${string}`,
+      address: "0x571F608851ABf768F332233A43B6D54240cDA01E" as `0x${string}`,
       abi: Confidex_ABI,
       functionName: "depositToken",
       args: [tokenAddress, encryptedAmount],

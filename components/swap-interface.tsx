@@ -196,7 +196,7 @@ export default function SwapInterface() {
           console.log(".")
 
           const response = await axios.post(
-            "http://localhost:3000/intent/submit",
+            "/api/intent/submit",
             {
               user: address,
               fromToken: tokenAddressMap[fromCurrency],

@@ -3,7 +3,7 @@ import { getViemChain, supportedChains } from "@inco/js"
 import { Lightning } from "@inco/js/lite"
 import { useAccount } from "wagmi"
 
-export const setupWallet = () => {
+export const SetupWallet = () => {
   const chainId = supportedChains.baseSepolia
   const zap = Lightning.latest("testnet", chainId)
 

@@ -266,43 +266,17 @@ export default function SwapInterface() {
     }
   }
 
-  const getMarketRate = async () => {
-    setLoading(true)
-    try {
-      const response = await axios.get(
-        `/api/get-market-rate?fromToken=${fromCurrency}&toToken=${toCurrency}`
-      )
-      setMarketRate(response.data.rate)
-      // Update toAmount based on current fromAmount and new rate
-      if (parseFloat(fromAmount) > 0) {
-        const newToAmount = (
-          parseFloat(fromAmount) * response.data.rate
-        ).toFixed(6)
-        setToAmount(newToAmount)
-      }
-    } catch (error) {
-      console.error("Error fetching market rate:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Update toAmount whenever fromAmount changes
+  // Update the useEffect to use a simple multiplier
   useEffect(() => {
-    if (parseFloat(fromAmount) > 0 && marketRate > 0) {
-      const newToAmount = (parseFloat(fromAmount) * marketRate).toFixed(6)
+    if (parseFloat(fromAmount) > 0) {
+      // Use a simple multiplier (e.g., 1.5) for mock data
+      const mockMultiplier = 1.5
+      const newToAmount = (parseFloat(fromAmount) * mockMultiplier).toFixed(6)
       setToAmount(newToAmount)
     } else {
       setToAmount("0.0")
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromAmount, marketRate])
-
-  // Fetch initial market rate
-  useEffect(() => {
-    getMarketRate()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromCurrency, toCurrency])
+  }, [fromAmount])
 
   const getTokenLogo = (currency: string) => {
     if (currency === "Patty") {
@@ -475,13 +449,6 @@ export default function SwapInterface() {
         {/* Rate Display */}
         <div className="flex justify-between mb-4">
           <span className="text-blue-600">Sell {fromCurrency} at rate</span>
-          <button
-            onClick={getMarketRate}
-            disabled={loading}
-            className="text-blue-500 cursor-pointer hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? "Loading..." : "Set market rate"}
-          </button>
         </div>
 
         {/* Rate Card */}
@@ -489,21 +456,14 @@ export default function SwapInterface() {
           <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex-1 border border-blue-600/20">
             <span className="text-blue-600 block">{toCurrency}</span>
             <div className="flex items-baseline">
-              <span className="text-blue-600 text-xl font-bold">
-                {marketRate.toFixed(6)}
-              </span>
-              <span className="text-blue-500/70 text-sm ml-2">
-                ~{(marketRate * 2.63).toFixed(2)} USD
-              </span>
+              <span className="text-blue-600 text-xl font-bold">1.500000</span>
+              <span className="text-blue-500/70 text-sm ml-2">~3.95 USD</span>
             </div>
           </div>
           <div className="bg-gradient-to-r from-blue-600/10 to-blue-500/10 rounded-none p-4 flex-1 border border-blue-600/20 border-l-0">
             <span className="text-blue-600 block">Min Amount</span>
             <span className="text-blue-600 text-xl font-bold">
-              {(
-                parseFloat(toAmount) *
-                (1 - (Math.random() * 0.007 + 0.004))
-              ).toFixed(2)}
+              {(parseFloat(toAmount) * 0.95).toFixed(2)}
             </span>
           </div>
         </div>

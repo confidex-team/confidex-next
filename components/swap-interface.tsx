@@ -18,11 +18,11 @@ import { useDeposit } from "@/hooks/useDeposit"
 import { matchingEngine } from "@/lib/matching-engine"
 import { supportedChains } from "@inco/js"
 import { Lightning } from "@inco/js/lite"
-import { EncryptedBalance } from './EncryptedBalance'
-import { Hex } from 'viem'
-import cCMFAbi from '@/abi/cCMF.json'
-import cUSDCAbi from '@/abi/cUSDC.json'
-import approveFunctionAbi from '@/abi/approveABI.json'
+import { EncryptedBalance } from "./EncryptedBalance"
+import { Hex } from "viem"
+import cCMFAbi from "@/abi/cCMF.json"
+import cUSDCAbi from "@/abi/cUSDC.json"
+import approveFunctionAbi from "@/abi/approveABI.json"
 
 export default function SwapInterface() {
   const [totalTrades, setTotalTrades] = useState(1)
@@ -32,7 +32,6 @@ export default function SwapInterface() {
   const [toAmount, setToAmount] = useState("0.0")
   const [maxDuration, setMaxDuration] = useState("Min")
   const [maxDurationValue, setMaxDurationValue] = useState("4")
-  const [marketRate, setMarketRate] = useState(0)
   const [loading, setLoading] = useState(false)
   const [swappedAmount, setSwappedAmount] = useState("0.0")
   const { isConnected, address } = useAccount()
@@ -57,36 +56,36 @@ export default function SwapInterface() {
   // Replace useBalance with useContractRead
   const { data: fromEncryptedBalance, isError: fromError } = useReadContract({
     address: tokenAddressMap[fromCurrency],
-    abi: fromCurrency === 'cCMF' ? cCMFAbi : cUSDCAbi,
-    functionName: 'balanceOf',
+    abi: fromCurrency === "cCMF" ? cCMFAbi : cUSDCAbi,
+    functionName: "balanceOf",
     args: [address],
   })
 
   const { data: toEncryptedBalance, isError: toError } = useReadContract({
     address: tokenAddressMap[toCurrency],
-    abi: toCurrency === 'cCMF' ? cCMFAbi : cUSDCAbi,
-    functionName: 'balanceOf',
+    abi: toCurrency === "cCMF" ? cCMFAbi : cUSDCAbi,
+    functionName: "balanceOf",
     args: [address],
   })
 
-//   // Add debug logs
-//   console.log('From Encrypted Balance:', {
-//     balance: fromEncryptedBalance,
-//     error: fromError,
-//     currency: fromCurrency,
-//     address: tokenAddressMap[fromCurrency]
-//   })
-//   console.log('To Encrypted Balance:', {
-//     balance: toEncryptedBalance,
-//     error: toError,
-//     currency: toCurrency,
-//     address: tokenAddressMap[toCurrency]
-//   })
+  //   // Add debug logs
+  //   console.log('From Encrypted Balance:', {
+  //     balance: fromEncryptedBalance,
+  //     error: fromError,
+  //     currency: fromCurrency,
+  //     address: tokenAddressMap[fromCurrency]
+  //   })
+  //   console.log('To Encrypted Balance:', {
+  //     balance: toEncryptedBalance,
+  //     error: toError,
+  //     currency: toCurrency,
+  //     address: tokenAddressMap[toCurrency]
+  //   })
 
   // Calculate total balance including swapped amount
-//   const totalToBalance = toEncryptedBalance
-//     ? (parseFloat(toEncryptedBalance.toString()) + parseFloat(swappedAmount)).toFixed(6)
-//     : swappedAmount
+  //   const totalToBalance = toEncryptedBalance
+  //     ? (parseFloat(toEncryptedBalance.toString()) + parseFloat(swappedAmount)).toFixed(6)
+  //     : swappedAmount
 
   const handleSwap = () => {
     if (!isConnected) return
@@ -109,7 +108,7 @@ export default function SwapInterface() {
   })
 
   const { writeContractAsync } = useWriteContract()
-  
+
   const handleMainSwap = async () => {
     if (!isConnected || !address) return
     setSwapStage("depositing")
@@ -133,11 +132,11 @@ export default function SwapInterface() {
         const approveTx = await writeContractAsync({
           address: tokenAddressMap[fromCurrency],
           abi: approveFunctionAbi as any,
-          functionName: 'approve',
+          functionName: "approve",
           args: [dappAddress, encryptedAmountforApprove],
         })
         console.log("✅ Approval transaction submitted:", approveTx)
-        
+
         // Wait for approval transaction to be mined
         await new Promise((resolve) => setTimeout(resolve, 3000))
       } catch (approveError) {
@@ -194,17 +193,14 @@ export default function SwapInterface() {
           await new Promise((resolve) => setTimeout(resolve, 4000))
           console.log(".")
 
-          const response = await axios.post(
-            "/api/intent/submit",
-            {
-              user: address,
-              fromToken: tokenAddressMap[fromCurrency],
-              toToken: tokenAddressMap[toCurrency],
-              amount: fromAmount,
-              receive: toAmount,
-              expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString(), // 3 minutes from now
-            }
-          )
+          const response = await axios.post("/api/intent/submit", {
+            user: address,
+            fromToken: tokenAddressMap[fromCurrency],
+            toToken: tokenAddressMap[toCurrency],
+            amount: fromAmount,
+            receive: toAmount,
+            expiryTime: new Date(Date.now() + 3 * 60 * 1000).toISOString(), // 3 minutes from now
+          })
 
           console.log("✅ Intent submission successful:", response.data)
         } catch (error) {
@@ -354,9 +350,9 @@ export default function SwapInterface() {
               <span className="text-sm text-gray-500">Balance:</span>
               {fromEncryptedBalance && address ? (
                 <div>
-                  <EncryptedBalance 
-                    encryptedBalance={fromEncryptedBalance as Hex} 
-                    tokenSymbol={fromCurrency} 
+                  <EncryptedBalance
+                    encryptedBalance={fromEncryptedBalance as Hex}
+                    tokenSymbol={fromCurrency}
                   />
                 </div>
               ) : null}
@@ -424,9 +420,9 @@ export default function SwapInterface() {
               <span className="text-sm text-gray-500">Balance:</span>
               {toEncryptedBalance && address ? (
                 <div>
-                  <EncryptedBalance 
-                    encryptedBalance={toEncryptedBalance as Hex} 
-                    tokenSymbol={toCurrency} 
+                  <EncryptedBalance
+                    encryptedBalance={toEncryptedBalance as Hex}
+                    tokenSymbol={toCurrency}
                   />
                 </div>
               ) : null}
